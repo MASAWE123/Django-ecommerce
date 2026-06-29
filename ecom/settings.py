@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-%az0ia4rt+s!0$m!g4&)lsli4sh18qhp0w_$4e95b57f8$um*=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['django-ecommerce-production-4c4a.up.railway.app']
+ALLOWED_HOSTS = ['django-ecommerce-production-4c4a.up.railway.app','127.0.0.1']
 CSRF_TRUSTED_ORIGINS = ['https://django-ecommerce-production-4c4a.up.railway.app']
 
 
@@ -92,7 +92,7 @@ DATABASES = {
        'NAME':  BASE_DIR/'db.sqlite3',
 
 }}
-DATABASE_URL ='postgresql://postgres:zTjqAFCHJKiWaSeIWCxjIpDjPfjlzoZC@postgres.railway.internal:5432/railway'
+DATABASE_URL ='postgresql://postgres:xmmFufYUUmuCgiSIaXfeiytusVdUdOPO@reseau.proxy.rlwy.net:10614/railway'
 import dj_database_url
 DATABASES['default'] = dj_database_url.parse(DATABASE_URL,conn_max_age=1800)
 
