@@ -84,19 +84,17 @@ WSGI_APPLICATION = 'ecom.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
-        #'ENGINE': 'django.db.backends.sqlite3',
-        #'NAME': BASE_DIR / 'db.sqlite3',
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME':'railway',
-        'USER':'postgres',
-        'PASSWORD':os.environ['DB_PASSWORD_YO'],
-        'HOST':'thomas.proxy.rlwy.net',
-        'PORT':'18183' ,
+        'ENGINE': 'django.db.backends.sqlite3',
+       'NAME':  BASE_DIR/'db.sqlite3',
         
     }
 }
+DATABASE_URL ='postgresql://postgres:zTjqAFCHJKiWaSeIWCxjIpDjPfjlzoZC@postgres.railway.internal:5432/railway'
+import dj_database_url
+DATABASES['default'] = dj_database_url.parse(DATABASE_URL,conn_max_age=1800)
 
 
 # Password validation
