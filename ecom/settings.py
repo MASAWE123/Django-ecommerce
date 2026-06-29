@@ -87,11 +87,11 @@ WSGI_APPLICATION = 'ecom.wsgi.application'
 
 DATABASES = {
     'default': {
+
         'ENGINE': 'django.db.backends.sqlite3',
        'NAME':  BASE_DIR/'db.sqlite3',
-        
-    }
-}
+
+}}
 DATABASE_URL ='postgresql://postgres:zTjqAFCHJKiWaSeIWCxjIpDjPfjlzoZC@postgres.railway.internal:5432/railway'
 import dj_database_url
 DATABASES['default'] = dj_database_url.parse(DATABASE_URL,conn_max_age=1800)
