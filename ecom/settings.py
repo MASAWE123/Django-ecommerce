@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -30,7 +31,7 @@ SECRET_KEY = 'django-insecure-%az0ia4rt+s!0$m!g4&)lsli4sh18qhp0w_$4e95b57f8$um*=
 DEBUG = True
 
 ALLOWED_HOSTS = ['django-ecommerce-production-4c4a.up.railway.app','127.0.0.1','masawe.store']
-CSRF_TRUSTED_ORIGINS = ['https://django-ecommerce-production-4c4a.up.railway.app','http://masawe.store']
+CSRF_TRUSTED_ORIGINS = ['https://django-ecommerce-production-4c4a.up.railway.app','https://masawe.store']
 
 
 # Application definition
