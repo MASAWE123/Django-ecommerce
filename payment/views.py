@@ -142,10 +142,10 @@ def billing_info(request):
                 'item_name':'Headset Order',
                 'no_shipping':'2',
                 'invoice':str(uuid.uuid4()),
-                'currency_code':"KES",
+                'currency_code':"USD",
                 'notify_url':'https://{}{}'.format(host,reverse("paypal-ipn")),
-                'return_url':'https://{}{}'.format(host,reverse("payment_sucess")),
-                'cancel_url':'https://{}{}'.format(host,reverse("payment_failed")),
+                'return_url':'https://{}{}'.format(host,reverse("payment_success")),
+                'cancel_return':'https://{}{}'.format(host,reverse("payment_failed")),
             }
             # Create acutual papal Button
             paypal_form = PayPalPaymentsForm(initial=paypal_dict)
