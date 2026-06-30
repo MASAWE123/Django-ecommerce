@@ -6,6 +6,12 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from store.models import Product
 import datetime
+
+#import some paypal stuff
+from django.urls import reverse
+from paypal.standard.forms import PayPalPaymentsForm
+from django.conf import settings
+import uuid
 # Create your views here.
 def orders(request,pk):
      if request.user.is_authenticated and request.user.is_superuser:
@@ -77,6 +83,11 @@ def shipped_dash(request):
 
 def payment_success(request):
     return render(request,"payment/payment_success.html",{})
+
+def payment_failed(request):
+    return render(request,"payment/payment_failed.html",{})
+
+
 def checkout(request):
        if request.user.is_authenticated:
         shipping_user,created =ShippingAddress.objects.get_or_create(user= request.user)
@@ -101,6 +112,7 @@ def billing_info(request):
             cart = Cart.objects.get(user=request.user)
             cartitem =CartItem.objects.filter(cart=cart)
             totals = 0
+         
 
             my_shipping = {
                     "full_name": shipping_user.shipping_full_name,
@@ -119,7 +131,28 @@ def billing_info(request):
                     totals += (item.product.sale_price * item.quantity)
                 else:
                     totals += (item.product.price * item.quantity)
-            context ={'cart':cart,'cartitem':cartitem,'totals':totals,'shipping_user':shipping_user,'billing_form':billing_form}
+
+               #Get the host 
+            host = request.get_host()
+
+            # create paypal form dictionary
+            paypal_dict = {
+                'business':settings.PAYPAL_RECEIVER_EMAIL,
+                'amount': totals,
+                'item_name':'Headset Order',
+                'no_shipping':'2',
+                'invoice':str(uuid.uuid4()),
+                'currency_code':"KES",
+                'notify_url':'https://{}{}'.format(host,reverse("paypal-ipn")),
+                'return_url':'https://{}{}'.format(host,reverse("payment_sucess")),
+                'cancel_url':'https://{}{}'.format(host,reverse("payment_failed")),
+            }
+            # Create acutual papal Button
+            paypal_form = PayPalPaymentsForm(initial=paypal_dict)
+
+            context ={'cart':cart,'cartitem':cartitem,'totals':totals,'shipping_user':shipping_user,'billing_form':billing_form,'paypal_form':paypal_form,}
+
+
             return render(request,"payment/billing_info.html",context)
         else:
             messages.success(request,"Access Denied")
