@@ -91,7 +91,13 @@ def payment_failed(request):
 def checkout(request):
        if request.user.is_authenticated:
         shipping_user,created =ShippingAddress.objects.get_or_create(user= request.user)
-        shipping_form = ShippingForm(instance = shipping_user)
+    
+        shipping_form = ShippingForm(request.POST or None,instance = shipping_user)
+
+        if shipping_form.is_valid():
+            shipping_form.save()
+       
+            
         cart = Cart.objects.get(user=request.user)
         cartitem =CartItem.objects.filter(cart=cart)
         totals = 0
@@ -135,13 +141,19 @@ def billing_info(request):
                #Get the host 
             host = request.get_host()
 
+            # Create Paypal form dictionary
+            my_Invoice = str(uuid.uuid4())
+
+            #Create an order
+
+
             # create paypal form dictionary
             paypal_dict = {
                 'business':settings.PAYPAL_RECEIVER_EMAIL,
                 'amount': totals,
                 'item_name':'Headset Order',
                 'no_shipping':'2',
-                'invoice':str(uuid.uuid4()),
+                'invoice':my_Invoice,
                 'currency_code':"USD",
                 'notify_url':'https://{}{}'.format(host,reverse("paypal-ipn")),
                 'return_url':'https://{}{}'.format(host,reverse("payment_success")),
@@ -149,6 +161,42 @@ def billing_info(request):
             }
             # Create acutual papal Button
             paypal_form = PayPalPaymentsForm(initial=paypal_dict)
+
+            full_name = my_shipping['full_name']
+            email = my_shipping['email']
+            amount_paid = totals
+            shipping_address= f"{my_shipping['address1']}\n{my_shipping['address2']}\n{my_shipping['city']}\n{my_shipping['state']}\n{my_shipping['zipcode']}\n{my_shipping['country']}"
+
+
+            if request.user.is_authenticated:
+                user = request.user
+                create_order = Order(user=user,full_name=full_name,email=email,shipping_address=shipping_address,amount_paid=amount_paid,invoice=my_Invoice)
+                create_order.save()
+                
+                order= create_order
+                totals = 0
+                for item in cartitem:
+                    
+                    product_id = item.product.id
+                    quantity = item.quantity
+
+                    
+                    if item.product.is_sale:
+                        price= (item.product.sale_price * item.quantity)
+                    else:
+                        price= (item.product.price * item.quantity)
+                    
+                    create_order_item =OrderItem(order_id_id=order.id,product_id_id=product_id,user=user,quantity=quantity,price=price)
+                    create_order_item.save()
+
+              
+
+
+                messages.success(request,"Order Placed!")
+                return redirect('home')
+
+
+
 
             context ={'cart':cart,'cartitem':cartitem,'totals':totals,'shipping_user':shipping_user,'billing_form':billing_form,'paypal_form':paypal_form,}
 
