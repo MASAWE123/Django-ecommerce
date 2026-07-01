@@ -7,17 +7,13 @@ from .models import Order
 
 @receiver(valid_ipn_received)
 def paypal_payment_received(sender,**kwargs):
-     # add a ten second pause
      time.sleep(10)
      paypal_obj = sender
-     # Grab the invoice
      my_Invoice = str(paypal_obj.invoice)
      
-     # match the paypal invoice to the order invoice 
 
      my_order = Order.objects.get(invoice = my_Invoice)
 
-     # Record the Order was paid 
      my_order.paid = True
 
      my_order.save()

@@ -82,7 +82,11 @@ def shipped_dash(request):
 
 
 def payment_success(request):
-    return render(request,"payment/payment_success.html",{})
+    if request.user.is_authenticated:
+      cart = Cart.objects.get(user=request.user)
+      cartitem =CartItem.objects.filter(cart=cart)
+      cartitem.delete()
+      return render(request,"payment/payment_success.html",{})
 
 def payment_failed(request):
     return render(request,"payment/payment_failed.html",{})
