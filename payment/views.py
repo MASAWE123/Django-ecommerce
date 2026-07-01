@@ -189,15 +189,6 @@ def billing_info(request):
                     create_order_item =OrderItem(order_id_id=order.id,product_id_id=product_id,user=user,quantity=quantity,price=price)
                     create_order_item.save()
 
-              
-
-
-                messages.success(request,"Order Placed!")
-                return redirect('home')
-
-
-
-
             context ={'cart':cart,'cartitem':cartitem,'totals':totals,'shipping_user':shipping_user,'billing_form':billing_form,'paypal_form':paypal_form,}
 
 
