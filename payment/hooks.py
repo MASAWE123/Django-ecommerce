@@ -18,7 +18,7 @@ def paypal_payment_received(sender,**kwargs):
      my_order = Order.objects.get(invoice = my_Invoice)
 
      # Record the Order was paid 
-     my_Order.paid = True
+     my_order.paid = True
 
      my_order.save()
 
