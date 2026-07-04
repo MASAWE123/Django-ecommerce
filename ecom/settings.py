@@ -152,3 +152,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Add paypal settings
 PAYPAL_TEST = True
 PAYPAL_RECEIVER_EMAIL = 'business@masawe.com'
+INTASEND_PUBLISHABLE_KEY= os.environ.get('INTASEND_PUBLISHABLE_KEY')
+INTASEND_SECRET_KEY =os.environ.get('INTASEND_SECRET_KEY')
+INTASEND_TEST = os.environ.get('INTASEND_TEST') == "True"

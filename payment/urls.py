@@ -11,4 +11,6 @@ urlpatterns = [
     path('not_shipped_dash',views.not_shipped_dash,name="not_shipped_dash"),
     path('orders/<str:pk>',views.orders,name='orders'),
     path('paypal',include("paypal.standard.ipn.urls")),
+    path('intasend/',views.intasend_payment, name ="intasend_payment"),
+    path("intasend_callback",views.intasend_callback,name = "intasend_callback")
 ]

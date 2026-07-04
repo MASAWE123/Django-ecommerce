@@ -72,14 +72,13 @@
                     
                      
                         <div class="card-body">
-                    <form method ="POST" action = "{% url 'process_order' %}">
+                    <form method ="POST" action = "{% url 'intasend_payment' %}">
                           {% csrf_token %}
-                          {{billing_form.as_p}}
+                          
                       
-                        </div>
-                        </div>
-                        <br><br>   
-                        <button  type ="submit" class="btn btn-secondary">Pay Now</button>
+                        
+                        <button  type ="submit" class="btn btn-secondary">Pay with Mpesa</button>
+
                     </form>
                     
                     </div>

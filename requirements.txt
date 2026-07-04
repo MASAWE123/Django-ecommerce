@@ -6,6 +6,7 @@ Django==6.0.5
 django-paypal==2.1
 gunicorn==26.0.0
 idna==3.18
+intasend-python==1.1.2
 packaging==26.2
 pillow==12.2.0
 psycopg==3.3.4

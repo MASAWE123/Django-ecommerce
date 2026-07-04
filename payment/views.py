@@ -201,6 +201,30 @@ def billing_info(request):
             messages.success(request,"Access Denied")
             return redirect('home')
 
+
+def instasend_payment(request):
+    if request.user.is_authenticated:
+        service = APIService(
+            token = settings.INTASEND_SECRET_KEY,
+            publishable_key =settings.INTASEND_PUBLISHABLE_KEY,
+            test = settings.INTASEND_TEST,
+        )
+        order = Order.objects.filter(
+            user = request.user,
+            paid= False
+         ).latest("id")
+        response = service.checkout.create(
+            amount =order.amount_paid,
+            currency = 'KES',
+            email = order.email,
+            api_ref =order.invoice,
+            first_name =order.first_name,
+            redirect_url = request.build_absolute_url("payment_success"),
+
+        )
+        return redirect(response["url"])
+
+
 def process_order(request):
     if request.POST:
         payment_form = PaymentForm(request.POST or None)
