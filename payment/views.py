@@ -202,7 +202,7 @@ def billing_info(request):
             return redirect('home')
 
 
-def instasend_payment(request):
+def intasend_payment(request):
     if request.user.is_authenticated:
         service = APIService(
             token = settings.INTASEND_SECRET_KEY,
