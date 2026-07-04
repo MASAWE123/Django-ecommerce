@@ -219,7 +219,7 @@ def intasend_payment(request):
             currency = 'KES',
             email = order.email,
             api_ref =order.invoice,
-            first_name =order.first_name,
+            first_name =order.full_name,
             redirect_url = request.build_absolute_url("payment_success"),
 
         )
