@@ -220,7 +220,9 @@ def intasend_payment(request):
             email = order.email,
             api_ref =order.invoice,
             first_name =order.full_name,
-            redirect_url = request.build_absolute_url("payment_success"),
+            redirect_url = request.build_absolute_url(
+                reverse("payment_success")
+            ),
 
         )
         return redirect(response["url"])
