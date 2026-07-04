@@ -215,7 +215,7 @@ def intasend_payment(request):
             paid= False
          ).latest("id")
         response = service.collect.checkout(
-            amount =order.amount_paid,
+            amount =int(order.amount_paid),
             currency = 'KES',
             email = order.email,
             api_ref =order.invoice,
