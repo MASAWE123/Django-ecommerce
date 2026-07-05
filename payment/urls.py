@@ -12,5 +12,6 @@ urlpatterns = [
     path('orders/<str:pk>',views.orders,name='orders'),
     path('paypal',include("paypal.standard.ipn.urls")),
     path('intasend/',views.intasend_payment, name ="intasend_payment"),
+    path('webhook/',views.intasend_webhook,name="intasend_webhook")
    
 ]
