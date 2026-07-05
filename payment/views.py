@@ -9,6 +9,7 @@ import datetime
 from intasend import APIService
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
+import time
 
 #import some paypal stuff
 from django.urls import reverse
@@ -206,6 +207,8 @@ def billing_info(request):
 
 
 def intasend_payment(request):
+    print("webhood hit")
+    time.sleep(10)
     if request.user.is_authenticated:
         service = APIService(
             token = settings.INTASEND_SECRET_KEY,
