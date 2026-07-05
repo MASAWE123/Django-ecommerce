@@ -296,44 +296,9 @@ def process_order(request):
 
 @csrf_exempt
 def intasend_webhook(request):
-        print('mmasawe')
-        if request.method != "POST":
-            return HttpResponse("Method not Allowed",status=405)
+    print("===== WEBHOOK VIEW IS RUNNING =====")
+    return HttpResponse("Webhook test")
 
-        try:
-            data = json.loads(request.body)
-            print("_____intasend webhood______")
-            print(data)
-            print("___________________________")
-
-            received_challenge = data.get("challenge")
-
-            if received_challenge != settings.INTASEND_WEBHOOK_CHALLENGE:
-                return HttpResponse("Unauthorized",status=401)
-            
-            api_ref= data.get("api_ref")
-            state = data.get("state")
-
-            if not api_ref:
-                return HttpResponse("Missing api_ref",status=400)
-
-            try:
-                order = Order.objects.get(invoice=api_ref)
-            except Order.DoesNotExist:
-                return HttpResponse("Order not found",status=404)
-
-            if state == "COMPLETE":
-                order.paid = True
-                order.save()
-            elif state in ["FAILED","CANCELLED"]:
-                order.paid = False
-                order.save()
-            return HttpResponse("Webhook received", status=200)
-
-        except json.JSONDecodeError:
-            return HttpResponse("Invalid Json",status = 400)
-        except Exception as e:
-            print("webhook Error",e)
-            return HttpResponse("Server Error",status = 500)
+        
 
 
