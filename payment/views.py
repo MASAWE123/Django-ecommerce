@@ -225,6 +225,7 @@ def intasend_payment(request):
             email = order.email,
             api_ref =order.invoice,
             first_name =order.full_name,
+            method = 'M-PESA',
             redirect_url = request.build_absolute_uri(
                 reverse("payment_success")
             ),
