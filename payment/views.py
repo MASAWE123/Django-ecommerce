@@ -297,7 +297,7 @@ def process_order(request):
 @csrf_exempt
 def intasend_webhook(request):
     print("===== WEBHOOK VIEW IS RUNNING =====")
-    return HttpResponse("Webhook test")
+    raise Exception("WEBHOOK VIEW REACHED")
 
         
 
