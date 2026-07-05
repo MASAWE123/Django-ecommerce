@@ -207,8 +207,7 @@ def billing_info(request):
 
 
 def intasend_payment(request):
-    print("webhood hit")
-    time.sleep(10)
+
     if request.user.is_authenticated:
         service = APIService(
             token = settings.INTASEND_SECRET_KEY,
