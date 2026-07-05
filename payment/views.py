@@ -295,6 +295,8 @@ def process_order(request):
         return redirect('home')
 
 
+
+
 @csrf_exempt
 def intasend_webhook(request):
     print("WEBHOOK HIT")
@@ -303,6 +305,7 @@ def intasend_webhook(request):
     if request.body:
         print("Raw body:", request.body.decode())
 
+    return HttpResponse("Webhook test", status=200)
         
 
 
