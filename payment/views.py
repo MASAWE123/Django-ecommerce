@@ -294,10 +294,14 @@ def process_order(request):
         messages.success(request,"Access Denied")
         return redirect('home')
 
+
 @csrf_exempt
 def intasend_webhook(request):
-    print("===== WEBHOOK VIEW IS RUNNING =====")
-    raise Exception("WEBHOOK VIEW REACHED")
+    print("WEBHOOK HIT")
+    print("Method:", request.method)
+
+    if request.body:
+        print("Raw body:", request.body.decode())
 
         
 
