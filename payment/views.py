@@ -141,7 +141,7 @@ def billing_info(request):
                     "state": shipping_user.shipping_state,
                     "zipcode": shipping_user.shipping_zipcode,
                     "country": shipping_user.shipping_country,
-                    "phone":profile.phone,
+                    
             }
             request.session['my_shipping'] = my_shipping
 
@@ -178,7 +178,7 @@ def billing_info(request):
             full_name = my_shipping['full_name']
             email = my_shipping['email']
             amount_paid = totals
-            phone = my_shipping['phone']
+            phone = '0758751538'
             shipping_address= f"{my_shipping['address1']}\n{my_shipping['address2']}\n{my_shipping['city']}\n{my_shipping['state']}\n{my_shipping['zipcode']}\n{my_shipping['country']}"
 
 
