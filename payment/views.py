@@ -230,7 +230,6 @@ def intasend_payment(request):
             email = order.email,
             api_ref =order.invoice,
             first_name =order.full_name,
-            method = "M-PESA",
             redirect_url = request.build_absolute_uri(
                 reverse("payment_success")
             ),
@@ -304,30 +303,23 @@ def process_order(request):
 def send_sms(phone,message):
     url = "https://portal.zettatel.com/SMSApi/send"
 
-    headers = {
-        "Content-Type":"application/json"
-    }
+    
     payload = {
            "userid":settings.ZETTATEL_USERID,
            "password":settings.ZETTATEL_PASSWORD,
            "senderid":settings.ZETTATEL_SENDERID,
-           "msgType":"text",
-           "duplicatecheck":"true",
            "sendMethod":"quick",
-           "sms":[
-            {
-                "mobile":[phone],
-                "msg":message
-            }
-           ]
+           "mobile":phone,
+           "msgType":"text",
+           "msg":message,
+           "duplicatecheck":"true",
+           "output":"json",           
            
     }
 
-    response = requests.post(
-        url,
-        json = payload,
-        headers=headers
-    )
+    response = requests.post(url,data=payload)
+    print("Status Code:",response.status_code)
+    print("Response Text:",response.text)
     return response.json()
 
 @csrf_exempt
@@ -363,7 +355,7 @@ def intasend_webhook(request):
                 order.save()
                 # send sms after successful payment
                 if order.phone.startswith("0"):
-                       phone = "254" +order.phone[1:]
+                       phone = "254" + order.phone[1:]
                 send_sms(
                     phone = phone,
                     message=f"Hello{order.full_name},your payment has been recieved successfully.Thank you for shopping with us!"
