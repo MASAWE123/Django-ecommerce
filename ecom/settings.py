@@ -94,7 +94,7 @@ DATABASES = {
        'NAME':  BASE_DIR/'db.sqlite3',
 
 }}
-DATABASE_URL ='postgresql://postgres:xmmFufYUUmuCgiSIaXfeiytusVdUdOPO@reseau.proxy.rlwy.net:10614/railway'
+DATABASE_URL=os.environ.get('DATABASE_URL')
 import dj_database_url
 DATABASES['default'] = dj_database_url.parse(DATABASE_URL,conn_max_age=1800)
 
@@ -156,3 +156,6 @@ INTASEND_PUBLISHABLE_KEY= os.environ.get('INTASEND_PUBLISHABLE_KEY')
 INTASEND_SECRET_KEY =os.environ.get('INTASEND_SECRET_KEY')
 INTASEND_TEST = os.environ.get('INTASEND_TEST') == "True"
 INTASEND_WEBHOOK_CHALLENGE=os.environ.get('INTASEND_WEBHOOK_CHALLENGE')
+ZETTATEL_USERID=os.environ.get('ZETTATEL_USERID')
+ZETTATEL_PASSWORD =os.environ.get('ZETTATEL_PASSWORD')
+ZETTATEL_SENDERID=os.environ.get('ZETTATEL_SENDERID')

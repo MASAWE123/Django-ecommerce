@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect
 from cart.models import CartItem,Cart
 from payment.forms import ShippingForm,PaymentForm
+from store.models import Profile
 from payment.models import ShippingAddress,Order,OrderItem
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -10,6 +11,7 @@ from intasend import APIService
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 import json
+import requests
 
 
 #import some paypal stuff
@@ -125,6 +127,7 @@ def billing_info(request):
             billing_form = PaymentForm()
             shipping_user,created =ShippingAddress.objects.get_or_create(user= request.user)
             cart = Cart.objects.get(user=request.user)
+            profile =Profile.objects.filter(user=request.user)
             cartitem =CartItem.objects.filter(cart=cart)
             totals = 0
          
@@ -138,6 +141,7 @@ def billing_info(request):
                     "state": shipping_user.shipping_state,
                     "zipcode": shipping_user.shipping_zipcode,
                     "country": shipping_user.shipping_country,
+                    "phone":profile.phone,
             }
             request.session['my_shipping'] = my_shipping
 
@@ -174,12 +178,13 @@ def billing_info(request):
             full_name = my_shipping['full_name']
             email = my_shipping['email']
             amount_paid = totals
+            phone = my_shipping['phone']
             shipping_address= f"{my_shipping['address1']}\n{my_shipping['address2']}\n{my_shipping['city']}\n{my_shipping['state']}\n{my_shipping['zipcode']}\n{my_shipping['country']}"
 
 
             if request.user.is_authenticated:
                 user = request.user
-                create_order = Order(user=user,full_name=full_name,email=email,shipping_address=shipping_address,amount_paid=amount_paid,invoice=my_Invoice)
+                create_order = Order(user=user,full_name=full_name,email=email,shipping_address=shipping_address,amount_paid=amount_paid,invoice=my_Invoice,phone=phone)
                 create_order.save()
                 
                 order= create_order
@@ -296,6 +301,35 @@ def process_order(request):
         messages.success(request,"Access Denied")
         return redirect('home')
 
+def send_sms(phone,message):
+    url = "https://portal.zettatel.com/SMSApi/send"
+
+    headers = {
+        "Content-Type":"application/json"
+    }
+    payload = {
+           "userid":settings.ZETTATEL_USERID,
+           "password":settings.ZETTATEL_PASSWORD,
+           "senderid":settings.ZETTATEL_SENDERID,
+           "msgType":"text",
+           "duplicatecheck":"true",
+           "sendMethod":"quick",
+           "sms":[
+            {
+                "mobile":[phone],
+                "msg":message
+            }
+           ]
+           
+    }
+
+    response = requests.post(
+        url,
+        json = payload,
+        headers=headers
+    )
+    return response.json()
+
 @csrf_exempt
 def intasend_webhook(request):
         print('mmasawe')
@@ -327,6 +361,13 @@ def intasend_webhook(request):
             if state == "COMPLETE":
                 order.paid = True
                 order.save()
+                # send sms after successful payment
+                if order.phone.startswith("0"):
+                       phone = "254" +order.phone[1:]
+                send_sms(
+                    phone = phone,
+                    message=f"Hello{order.full_name},your payment has been recieved successfully.Thank you for shopping with us!"
+                )
             elif state in ["FAILED","CANCELLED"]:
                 order.paid = False
                 order.save()
@@ -337,5 +378,7 @@ def intasend_webhook(request):
         except Exception as e:
             print("webhook Error",e)
             return HttpResponse("Server Error",status = 500)
+
+        
 
 
