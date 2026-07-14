@@ -360,8 +360,8 @@ def intasend_webhook(request):
                 # send sms after successful payment
 
                 send_sms(
-                    phone = ['254707008119'],
-                    message=f"Hello{order.full_name},your payment has been recieved successfully.Thank you for shopping with us!"
+                    phone = ['254712486800'],
+                    message=f"Hello {order.full_name} ,your payment has been recieved successfully.Thank you for shopping with us!"
                 )
             elif state in ["FAILED","CANCELLED"]:
                 order.paid = False
