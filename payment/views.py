@@ -299,25 +299,28 @@ def process_order(request):
     else:
         messages.success(request,"Access Denied")
         return redirect('home')
+    
 
 def send_sms(phone,message):
     url = "https://portal.zettatel.com/SMSApi/send"
 
-    
     payload = {
-           "userid":settings.ZETTATEL_USERID,
-           "password":settings.ZETTATEL_PASSWORD,
-           "senderid":settings.ZETTATEL_SENDERID,
+           "userid":ZETTATEL_USERID,
+           "password":ZETTATEL_PASSWORD,
+           "senderid":ZETTATEL_SENDERID,
            "sendMethod":"quick",
-           "mobile":phone,
            "msgType":"text",
-           "msg":message,
            "duplicatecheck":"true",
-           "output":"json",           
+           "sms":[
+            {
+                "mobile":phone,
+                "msg":message
+            }
+           ]       
            
     }
 
-    response = requests.post(url,data=payload)
+    response = requests.post(url,data=json.dumps(payload),headers={'Content-Type': 'application/json'},timeout = 5)
     print("Status Code:",response.status_code)
     print("Response Text:",response.text)
     return response.json()
@@ -354,10 +357,9 @@ def intasend_webhook(request):
                 order.paid = True
                 order.save()
                 # send sms after successful payment
-                if order.phone.startswith("0"):
-                       phone = "254" + order.phone[1:]
+
                 send_sms(
-                    phone = phone,
+                    phone = ['254707008119'],
                     message=f"Hello{order.full_name},your payment has been recieved successfully.Thank you for shopping with us!"
                 )
             elif state in ["FAILED","CANCELLED"]:
