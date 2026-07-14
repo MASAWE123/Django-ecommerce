@@ -306,9 +306,9 @@ def send_sms(phone,message):
     url = "https://portal.zettatel.com/SMSApi/send"
 
     payload = {
-           "userid":ZETTATEL_USERID,
-           "password":ZETTATEL_PASSWORD,
-           "senderid":ZETTATEL_SENDERID,
+           "userid":settings.ZETTATEL_USERID,
+           "password":settings.ZETTATEL_PASSWORD,
+           "senderid":settings.ZETTATEL_SENDERID,
            "sendMethod":"quick",
            "msgType":"text",
            "duplicatecheck":"true",
