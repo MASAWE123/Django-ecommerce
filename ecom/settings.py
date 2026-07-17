@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'store',
     'cart',
     'payment',
+    'adminpanel',
     'whitenoise.runserver_nostatic',
     'paypal.standard.ipn',
 ]

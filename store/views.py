@@ -105,7 +105,12 @@ def login_user(request):
         if user is not None:
             login(request,user)
             messages.success(request,("You Have Been Logged In"))
-            return redirect('home')
+            
+            if user.profile.role == "admin":
+                return redirect("adminDashboard")
+            else:
+                return redirect("home")
+
         else:
              messages.success(request,("There was an error,please try again..."))
              return redirect('login')

@@ -7,7 +7,6 @@ from .models import Order
 
 @receiver(valid_ipn_received)
 def paypal_payment_received(sender,**kwargs):
-     time.sleep(10)
      paypal_obj = sender
      my_Invoice = str(paypal_obj.invoice)
      
