@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'adminpanel',
     'whitenoise.runserver_nostatic',
     'paypal.standard.ipn',
+    'storages'
 ]
 
 MIDDLEWARE = [
@@ -137,10 +138,29 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
+
 ]
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_ROOT= BASE_DIR/'staticfiles'
+
+
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+          "access_key":os.environ.get("ACCESS_KEY"),
+          "secret_key":os.environ.get("SECRET_KEY"),
+          "bucket_name":os.environ.get("BUCKET_NAME"),
+          "region_name":os.environ.get("REGION_NAME"),
+          "file_overwrite":False,
+          "default_acl":None,
+        },
+    },
+   "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+}
+}
+
 
 MEDIA_URL ='media/'
 MEDIA_ROOT =os.path.join(BASE_DIR,'media')
